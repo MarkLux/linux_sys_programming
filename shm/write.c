@@ -39,7 +39,7 @@ int main()
     * shmget获得共享内存访问后，使用此函数将对应的共享内存映射到本进程的地址空间中来
     * 返回映射后对应的首地址，后两个参数一般用0
     */
-    void *shm_addr = (char *)shmat(shm_id, 0, 0);
+    void *shm_addr = shmat(shm_id, 0, 0);
 
     if (shm_addr == (void *)-1)
     {

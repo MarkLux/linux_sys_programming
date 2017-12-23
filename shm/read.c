@@ -2,7 +2,7 @@
 #include <sys/wait.h>
 #include <sys/shm.h>
 #include <errno.h>
-
+#include <stdlib.h>
 int main()
 {
     key_t key = ftok("/home/shm/shmtest", 0);
@@ -33,6 +33,9 @@ int main()
     puts(str_addr);
 
     shmdt(shm_addr);
+
+    // 删除共享内存
+    shmctl(shm_id,IPC_RMID,NULL);
 
     return 0;
 }
