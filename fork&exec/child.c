@@ -1,6 +1,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/types.h>
+#include <sys/shm.h>
 #include <sys/ipc.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -31,21 +32,21 @@ int main(int argc, char *argv[])
     if (child_pid > 0)
     {
         wait4(child_pid, &child_status, WSTOPPED, &child_usage);
-        char *sharepath = "/home/shm/testshm";
+        char *sharepath = "/home/shm/testshm2";
         key_t key = ftok(sharepath, 0);
         if (key == -1)
         {
-            perror("child ftok failed: ");
+            perror("[child] ftok failed: ");
         }
-        shmid = shmget(key, 512, IPC_CREAT | IPC_EXCL | 0666);
+        int shmid = shmget(key, 512, IPC_CREAT | IPC_EXCL | 0666);
         if (shmid == -1)
         {
-            perror("child shmget error: ");
+            perror("[child] shmget error: ");
         }
         void *shmaddr = shmat(shmid, 0, 0);
         if (shmaddr == (void *)-1)
         {
-            perror("child shmat error: ");
+            perror("[child] shmat error: ");
         }
         printf("[child] shmaddr: %p\n",shmaddr);
         char * straddr = (char *)shmaddr;

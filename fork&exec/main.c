@@ -28,7 +28,7 @@ int main()
         // shmid_str = "100";
 
         // char *args[] = {"/home/judge/test/test_child", shmid_str, NULL};
-        execve("/home/judge/test/test_child",NULL, NULL);
+        execve("/home/judge/shm/child", NULL, NULL);
     }
     else if (child_id > 0)
     {
@@ -45,17 +45,21 @@ int main()
         key_t key = ftok(sharepath, 0);
         if (key == -1)
         {
-            perror("ftok error");
+            perror("[father] ftok error: ");
             return 0;
         }
         shmid = shmget(key, 512, IPC_CREAT | 0666);
+        if (shmid == -1)
+        {
+            perror("[father] shmget error: ");
+        }
 
         shmaddr = shmat(shmid, 0, 0);
         if (shmaddr == (void *)(-1))
         {
-            perror("shmat error: ");
+            perror("[father] shmat error: ");
         }
-        puts((char*)shmaddr);
+        puts((char *)shmaddr);
         shmdt(shmaddr);
         shmctl(shmid, IPC_RMID, NULL);
     }
